@@ -1,4 +1,4 @@
-#!C:\Users\gupta\Documents\GitHub\Chicken-Disease-Classification\cnn_venv\python.exe
+#!C:\Users\gupta\Documents\GitHub\Brain_Tumor_Detection\cnn_venv\python.exe
 __author__ = 'jszheng'
 import optparse
 import sys
