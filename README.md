@@ -1,1 +1,1 @@
-# Chicken-Disease-Classification
+# Brain-Tumor-Detection
