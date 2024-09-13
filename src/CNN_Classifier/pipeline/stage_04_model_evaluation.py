@@ -1,29 +1,34 @@
 from CNN_Classifier.config.configuration import ConfigurationManager
-from CNN_Classifier.components.data_ingestion import DataIngestion
+from CNN_Classifier.components.model_evaluation import Evaluation
 from CNN_Classifier.logger import logging
 
-STAGE_NAME = "Data Ingestion stage"
 
-class DataIngestionTrainingPipeline:
+
+
+STAGE_NAME = "Evaluation stage"
+
+
+class EvaluationPipeline:
     def __init__(self):
         pass
 
     def main(self):
         config = ConfigurationManager()
-        data_ingestion_config = config.get_data_ingestion_config()
-        data_ingestion = DataIngestion(config=data_ingestion_config)
-        data_ingestion.download_file()
-        data_ingestion.extract_zip_file()
-
+        val_config = config.get_validation_config()
+        evaluation = Evaluation(val_config)
+        evaluation.evaluation()
+        evaluation.save_score()
 
 
 
 if __name__ == '__main__':
     try:
+        logging.info(f"*******************")
         logging.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
-        obj = DataIngestionTrainingPipeline()
+        obj = EvaluationPipeline()
         obj.main()
         logging.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
     except Exception as e:
         logging.exception(e)
         raise e
+            

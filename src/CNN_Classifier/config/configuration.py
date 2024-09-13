@@ -1,7 +1,8 @@
 from CNN_Classifier.constants import *
 import os
+from pathlib import Path
 from CNN_Classifier.utils.common import read_yaml, create_directories
-from CNN_Classifier.entity.config_entity import (DataIngestionConfig,PrepareBaseModelConfig,PrepareCallbacksConfig)  #Added this line
+from CNN_Classifier.entity.config_entity import (DataIngestionConfig,PrepareBaseModelConfig,PrepareCallbacksConfig,TrainingConfig,EvaluationConfig)  #Added this line
 
 
 class ConfigurationManager:
@@ -69,6 +70,38 @@ class ConfigurationManager:
         )
 
         return prepare_callback_config
+    
+    def get_training_config(self) -> TrainingConfig:
+        training = self.config.training
+        prepare_base_model = self.config.prepare_base_model
+        params = self.params
+        training_data = os.path.join(self.config.data_ingestion.unzip_dir, "Brain_Tumor_Dataset")
+        create_directories([
+            Path(training.root_dir)
+        ])
+
+        training_config = TrainingConfig(
+            root_dir=Path(training.root_dir),
+            trained_model_path=Path(training.trained_model_path),
+            updated_base_model_path=Path(prepare_base_model.updated_base_model_path),
+            training_data=Path(training_data),
+            params_epochs=params.epochs,
+            params_batch_size=params.batch_size,
+            params_is_augmentation=params.AUGMENTATION,
+            params_image_size=params.input_shape
+        )
+
+        return training_config
+    
+    def get_validation_config(self) -> EvaluationConfig:
+        eval_config = EvaluationConfig(
+            path_of_model=Path("artifacts/training/model.h5"),
+            training_data=Path("artifacts/data_ingestion/Brain_Tumor_Dataset"),
+            all_params=self.params,
+            params_image_size=self.params.input_shape,
+            params_batch_size=self.params.batch_size
+        )
+        return eval_config
 
 
 

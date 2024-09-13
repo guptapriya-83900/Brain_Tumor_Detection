@@ -12,32 +12,21 @@ class PrepareBaseModel:
 
     
     def get_base_model(self):
-        # Step 1: Load the ResNet50 model with pre-trained weights, adjusting for grayscale input (1 channel)
-        input_tensor = tf.keras.layers.Input(shape=self.config.params_image_size)  # (224, 224, 1) for grayscale input
+        # Adjust the input shape for grayscale
+        input_tensor = tf.keras.layers.Input(shape=(self.config.params_image_size[0], self.config.params_image_size[1], 1))  # (300, 300, 1) for grayscale input
         
-        # Load the ResNet50 model without weights for the initial build (weights=None)
-        self.model = tf.keras.applications.ResNet50(
-            input_tensor=input_tensor,
-            weights=None,  # Don't load pre-trained weights yet
-            include_top=self.config.params_include_top
+        # Convert grayscale to 3-channel by replicating the grayscale channel
+        x = tf.keras.layers.Lambda(lambda x: tf.tile(x, [1, 1, 1, 3]))(input_tensor)
+        
+        # Load EfficientNetB3 with no top and ImageNet weights, but adjust input_tensor to have 3 channels
+        base_model = tf.keras.applications.EfficientNetB3(
+            include_top=self.config.params_include_top,
+            weights='imagenet',  # Load with ImageNet weights
+            input_tensor=x  # Pass the modified input tensor
         )
-
-        # Step 2: Load pre-trained ResNet50 model with ImageNet weights (3 channels)
-        pre_trained_model = tf.keras.applications.ResNet50(
-            weights='imagenet',
-            include_top=False,
-            input_shape=(224, 224, 3)  # RGB input shape
-        )
-
-         # Step 3: Copy weights from the pre-trained model, except for the first layer
-        for layer in self.model.layers:
-            if layer.name != 'conv1_conv':  # Skip the first conv layer, which has different input shape
-                try:
-                    layer.set_weights(pre_trained_model.get_layer(layer.name).get_weights())
-                except:
-                    # Some layers may not have weights (like pooling or dropout), so we skip them
-                    pass
-
+        
+        # Since EfficientNetB3 expects three channels, we replicate the single grayscale channel three times
+        self.model = tf.keras.models.Model(inputs=input_tensor, outputs=base_model.output)
 
         self.save_model(path=self.config.base_model_path, model=self.model)
 

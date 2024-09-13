@@ -1,7 +1,7 @@
 import os
 from box.exceptions import BoxValueError
 import yaml
-from src.CNN_Classifier.logger import logging
+from CNN_Classifier.logger import logging
 import json
 import joblib
 from ensure import ensure_annotations
