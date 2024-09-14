@@ -4,7 +4,7 @@
 AUGMENTATION: True
 include_top: False  # Don't include the top fully connected layers
 weights: "imagenet"  # Use pre-trained ImageNet weights
-input_shape: [300, 300, 1]  # Grayscale input shape
+input_shape: [224, 224, 1]  # Grayscale input shape
 l2_params: 0.01
 dropout: 0.5
  
@@ -16,5 +16,5 @@ metrics: ["accuracy"]
 freeze_layers: 10   # Unfreeze first 10 layers for fine-tuning
 classes: 2  # Number of classes in the classification task
 batch_size: 32
-epochs: 1
+epochs: 10
 
