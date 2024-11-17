@@ -13,11 +13,11 @@ This repository implements a deep learning-based brain tumor detection system us
 ---
 
 ## **Technologies Used**
-Deep Learning Frameworks: TensorFlow/Keras
-Web Framework: Flask
-Pipeline Tools: DVC, Docker
-CI/CD: GitHub Actions
-Versioning: Git
+- Deep Learning Frameworks: TensorFlow/Keras
+- Web Framework: Flask
+- Pipeline Tools: DVC, Docker
+- CI/CD: GitHub Actions
+- Versioning: Git
 
 ## **Workflows**
 
